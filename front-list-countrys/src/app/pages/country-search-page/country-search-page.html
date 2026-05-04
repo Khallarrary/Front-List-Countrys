@@ -1,0 +1,23 @@
+@if (isLoading) {
+    <p>Carregando...</p>
+}
+
+@if (errorMessage){
+    <p>{{ errorMessage }}</p>
+}
+
+@if (!isLoading && !errorMessage){
+    <section>
+        @for (country of countries; track country.name) {
+    <article>
+      <img [src]="country.flagUrl" [alt]="country.flagAlt">
+      <h2>{{country.name}}</h2>
+      <p>{{country.capital}}</p>
+      <p>{{country.region}}</p>
+      <p>{{country.population}}</p>
+    </article>
+  }
+</section>
+
+
+}
