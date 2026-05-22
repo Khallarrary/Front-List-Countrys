@@ -1,23 +1,34 @@
-@if (isLoading) {
-    <p>Carregando...</p>
-}
+<main class="page">
+  <header class="page-header">
+    <p class="eyebrow">Countries explorer</p>
+    <h1>Lista de paises</h1>
+    <p class="subtitle">Pesquise paises e veja bandeira, capital, regiao e populacao.</p>
 
-@if (errorMessage){
-    <p>{{ errorMessage }}</p>
-}
+    <app-search-form (sendNameForPage)="textoVindoSearch($event)" />
+  </header>
 
-@if (!isLoading && !errorMessage){
-    <section>
-        @for (country of countries; track country.name) {
-    <article>
-      <img [src]="country.flagUrl" [alt]="country.flagAlt">
-      <h2>{{country.name}}</h2>
-      <p>{{country.capital}}</p>
-      <p>{{country.region}}</p>
-      <p>{{country.population}}</p>
-    </article>
+  @if (isLoading) {
+    <p class="status">Carregando paises...</p>
   }
-</section>
 
+  @if (errorMessage){
+    <p class="status status-error">{{ errorMessage }}</p>
+  }
 
-}
+  @if (!isLoading && !errorMessage){
+    <section class="countries-grid" aria-label="Lista de paises">
+      @for (country of countries; track country.name) {
+        <article class="country-card">
+          <img [src]="country.flagUrl" [alt]="country.flagAlt">
+
+          <div class="country-content">
+            <h2>{{country.name}}</h2>
+            <p><span>Capital</span>{{country.capital}}</p>
+            <p><span>Regiao</span>{{country.region}}</p>
+            <p><span>Populacao</span>{{country.population | number}}</p>
+          </div>
+        </article>
+      }
+    </section>
+  }
+</main>

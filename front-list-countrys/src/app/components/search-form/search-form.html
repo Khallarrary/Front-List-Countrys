@@ -1,0 +1,9 @@
+<form (ngSubmit)="searchSubmit()">
+    <input 
+        type="text"
+        name="campoBusca"
+        placeholder="Digite o nome de um pais"
+        [(ngModel)]="typedText"
+    />
+    <button type="submit">Buscar</button>
+</form>
