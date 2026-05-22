@@ -74,6 +74,7 @@ export class CountrySearchPage implements OnInit{
                 error: () => {
                     this.errorMessage = "Falha ao recuperar o pais digitado";
                     this.isLoading = false;
+                    this.cdr.detectChanges();
                 }
             })
         }
