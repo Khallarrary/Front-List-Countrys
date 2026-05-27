@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {CountryService} from '../../services/country.service'
 import {Country} from '../../models/country-model'
 import { SearchForm } from '../../components/search-form/search-form';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
+
 
 
 @Component({
@@ -20,63 +20,62 @@ export class CountrySearchPage implements OnInit{
     countries: Country[] = [];
     isLoading: boolean = false; 
     errorMessage: string | null = null;
-
+    
     constructor(private countryService: CountryService, private cdr: ChangeDetectorRef){}
 
     ngOnInit(): void {
         this.getCountries();
     }
 
+    
     getCountries(): void{
-        this.isLoading = true;
-        this.errorMessage = null;
-
+        this.startLoading();
 
         this.countryService.getCountries().subscribe({
-            next: (data) => {
-                console.log(data)
-                this.countries = data;
-                this.isLoading = false;
-
-                this.cdr.detectChanges();
+            next: (countries) => {
+                this.countries = countries;
+                this.stopLoading();
             },
             error: () => {
-                this.errorMessage = 'Falha ao recuperar os paises';
-                this.isLoading = false;
+                this.errorMessage = "Falha ao recuperar os paises";
+                this.stopLoading();
             }            
         });
     }
 
-
-    typedText: string = ''
-
-    textoVindoSearch(searchSubmit: string): void {
-        this.typedText = searchSubmit;
-        this.getCountriesForName();
+    onSearch(searchText: string): void {
+        this.searchCountriesForName(searchText);
     }
 
-    getCountriesForName(){
+    private searchCountriesForName(searchText: string): void{
+        this.startLoading();
 
+        const trimmedSearchText:string = searchText.trim();
+
+        if(trimmedSearchText === ""){
+            this.getCountries();
+            return;
+        }
+        this.countryService.searchCountries(trimmedSearchText).subscribe({
+            next: (countries: Country[]) => {
+                this.countries = countries;
+                this.stopLoading();
+            },
+            error: () => {
+                this.errorMessage = "Falha ao recuperar o pais digitado";
+                this.stopLoading();
+            }
+        });      
+    }
+
+    private startLoading(): void {
         this.isLoading = true;
         this.errorMessage = null;
-
-        if(this.typedText.trim() === ""){
-            this.getCountries()
-        }
-        else {
-            this.countryService.searchCountries(this.typedText.trim()).subscribe({
-                next: (country: Country[]) => {
-                    console.log(country)
-                    this.countries = country;
-                    this.isLoading = false;
-                    this.cdr.detectChanges();
-                },
-                error: () => {
-                    this.errorMessage = "Falha ao recuperar o pais digitado";
-                    this.isLoading = false;
-                    this.cdr.detectChanges();
-                }
-            })
-        }
     }
+
+    private stopLoading(): void {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+    }
+
 }

@@ -4,7 +4,7 @@
     <h1>Lista de paises</h1>
     <p class="subtitle">Pesquise paises e veja bandeira, capital, regiao e populacao.</p>
 
-    <app-search-form (sendNameForPage)="textoVindoSearch($event)" />
+    <app-search-form (sendNameForPage)="onSearch($event)" />
   </header>
 
   @if (isLoading) {
