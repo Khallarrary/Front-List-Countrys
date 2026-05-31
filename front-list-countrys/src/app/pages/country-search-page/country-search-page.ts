@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {CountryService} from '../../services/country.service'
 import {Country} from '../../models/country-model'
 import { SearchForm } from '../../components/search-form/search-form';
+import { CountryQuiz } from '../../components/country-quiz/country-quiz';
 import { FormsModule } from '@angular/forms';
 
 
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'app-country-search-page',
     standalone: true,
-    imports: [CommonModule, FormsModule, SearchForm],
+    imports: [CommonModule, FormsModule, SearchForm, CountryQuiz],
     templateUrl: './country-search-page.html',
     styleUrl: './country-search-page.css'
 })
@@ -20,11 +21,20 @@ export class CountrySearchPage implements OnInit{
     countries: Country[] = [];
     isLoading: boolean = false; 
     errorMessage: string | null = null;
+    viewMode: 'list' | 'quiz' = "list";
     
     constructor(private countryService: CountryService, private cdr: ChangeDetectorRef){}
 
     ngOnInit(): void {
         this.getCountries();
+    }
+
+    showList(): void{
+        this.viewMode = "list"
+    }
+
+    showQuiz(): void{
+        this.viewMode = "quiz"
     }
 
     

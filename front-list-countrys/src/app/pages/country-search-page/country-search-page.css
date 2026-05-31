@@ -47,6 +47,39 @@ h1 {
   line-height: 1.5;
 }
 
+.view-switcher {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(120px, 1fr));
+  gap: 6px;
+  width: min(100%, 340px);
+  margin: 6px auto 0;
+  padding: 6px;
+  border: 1px solid #dfe6ef;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.view-switcher button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #475467;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.view-switcher button:hover {
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+.view-switcher button.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.24);
+}
+
 .status {
   margin: 28px auto;
   padding: 18px;
@@ -61,6 +94,21 @@ h1 {
   border-color: #fecaca;
   background: #fef2f2;
   color: #b91c1c;
+}
+
+.toolbar-panel,
+.quiz-panel {
+  margin-bottom: 24px;
+  padding: 18px;
+  border: 1px solid #dfe6ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(23, 32, 51, 0.06);
+}
+
+.quiz-panel {
+  max-width: 760px;
+  margin-inline: auto;
 }
 
 .countries-grid {
@@ -132,5 +180,9 @@ p span {
 
   h1 {
     font-size: 1.7rem;
+  }
+
+  .view-switcher {
+    grid-template-columns: 1fr;
   }
 }

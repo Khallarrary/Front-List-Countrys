@@ -4,18 +4,26 @@
     <h1>Lista de paises</h1>
     <p class="subtitle">Pesquise paises e veja bandeira, capital, regiao e populacao.</p>
 
-    <app-search-form (sendNameForPage)="onSearch($event)" />
-  </header>
+    <div class="view-switcher" aria-label="Selecionar visualizacao">
+      <button type="button" [class.active]="viewMode === 'list'" (click)="showList()">Lista</button>
+      <button type="button" [class.active]="viewMode === 'quiz'" (click)="showQuiz()">Quiz</button>
+    </div>
+
+    </header>
 
   @if (isLoading) {
-    <p class="status">Carregando paises...</p>
-  }
+      <p class="status">Carregando paises...</p>
+    }
 
-  @if (errorMessage){
-    <p class="status status-error">{{ errorMessage }}</p>
-  }
+    @if (errorMessage){
+      <p class="status status-error">{{ errorMessage }}</p>
+    }
 
-  @if (!isLoading && !errorMessage){
+      @if (viewMode === "list"){
+        <div class="toolbar-panel">
+        <app-search-form (sendNameForPage)="onSearch($event)" />
+        </div>
+        @if (!isLoading && !errorMessage){
     <section class="countries-grid" aria-label="Lista de paises">
       @for (country of countries; track country.name) {
         <article class="country-card">
@@ -31,4 +39,12 @@
       }
     </section>
   }
+      }
+      
+      @if (viewMode === "quiz"){
+        <div class="quiz-panel">
+          <app-country-quiz [countries]="countries"/>
+        </div>
+      }  
+  
 </main>

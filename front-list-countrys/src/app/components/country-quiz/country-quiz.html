@@ -1,0 +1,29 @@
+<section class="quiz-card">
+  <div class="quiz-header">
+    <p class="quiz-kicker">{{ countries.length }} paises disponiveis</p>
+    <h2>Quiz de bandeiras</h2>
+    <p>Acerte qual pais pertence a bandeira sorteada.</p>
+  </div>
+
+  <button class="sort-button" type="button" (click)="sortCountry()">Sortear pais</button>
+
+  @if(randomCountry; as country){
+    <div class="flag-frame">
+      <img [src]="country.flagUrl" [alt]="country.flagAlt">
+    </div>
+
+    <form (ngSubmit)="checkAnswer()">
+      <input
+        type="text"
+        name="guess"
+        placeholder="Digite o nome do pais"
+        [(ngModel)]="guessText"
+      />
+      <button type="submit">Verificar</button>
+    </form>
+
+    @if (feedbackMessage) {
+      <p class="feedback">{{ feedbackMessage }}</p>
+    }
+  }
+</section>
