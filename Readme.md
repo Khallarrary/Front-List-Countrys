@@ -4,7 +4,7 @@ Aplicacao Angular para listar paises consumindo uma API publica, com busca por n
 
 ## Preview
 
-![Countries Explorer - lista de paises](docs/images/countries-explorer-list.png)
+![Countries Explorer - lista de paises](front-list-countrys/docs/images/countries-explorer-list.png)
 
 ## Funcionalidades
 
