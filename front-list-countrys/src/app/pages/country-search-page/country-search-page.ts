@@ -22,6 +22,8 @@ export class CountrySearchPage implements OnInit{
     isLoading: boolean = false; 
     errorMessage: string | null = null;
     viewMode: 'list' | 'quiz' = "list";
+    currentPage: number = 1;
+    itemsPerPage: number = 12;
     
     constructor(private countryService: CountryService, private cdr: ChangeDetectorRef){}
 
@@ -37,6 +39,30 @@ export class CountrySearchPage implements OnInit{
         this.viewMode = "quiz"
     }
 
+    get paginatedCountries(): Country[]{
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const countriesOnThePage = this.countries.slice(startIndex, endIndex);
+
+        return countriesOnThePage;
+    }
+
+    get totalPages(): number{
+        const totalPages = this.countries.length / this.itemsPerPage;
+        return Math.ceil(totalPages);
+    }
+
+    nextPage(): void{
+        if(this.currentPage < this.totalPages){
+            this.currentPage += 1;
+        }
+    }
+
+    previousPage(): void{
+        if(this.currentPage > 1){
+            this.currentPage -= 1;
+        }
+    }
     
     getCountries(): void{
         this.startLoading();
@@ -44,6 +70,7 @@ export class CountrySearchPage implements OnInit{
         this.countryService.getCountries().subscribe({
             next: (countries) => {
                 this.countries = countries;
+                this.currentPage = 1;
                 this.stopLoading();
             },
             error: () => {
@@ -69,6 +96,7 @@ export class CountrySearchPage implements OnInit{
         this.countryService.searchCountries(trimmedSearchText).subscribe({
             next: (countries: Country[]) => {
                 this.countries = countries;
+                this.currentPage = 1;
                 this.stopLoading();
             },
             error: () => {

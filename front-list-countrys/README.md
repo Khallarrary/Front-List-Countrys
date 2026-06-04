@@ -1,59 +1,144 @@
-# FrontListCountrys
+# Countries Explorer
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.9.
+Aplicacao Angular para listar paises consumindo uma API publica, com busca por nome, paginacao e um quiz de bandeiras.
 
-## Development server
+## Preview
 
-To start a local development server, run:
+![Countries Explorer - lista de paises](docs/images/countries-explorer-list.png)
 
-```bash
-ng serve
+## Funcionalidades
+
+- Listagem de paises
+- Busca por nome
+- Paginacao da lista
+- Cards com bandeira, capital, regiao e populacao
+- Modo quiz de bandeiras
+- Validacao de resposta no quiz
+- Interface responsiva
+- Build em Docker com Nginx
+- Deploy em Azure Container Apps
+
+## Tecnologias
+
+- Angular
+- TypeScript
+- HTML
+- CSS
+- REST Countries API
+- Docker
+- Nginx
+- Docker Hub
+- Azure Container Apps
+
+## API utilizada
+
+Os dados dos paises sao consumidos da API publica REST Countries:
+
+```txt
+https://restcountries.com/
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Executar localmente
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Instale as dependencias:
 
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Execute o servidor de desenvolvimento:
 
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
+Acesse:
 
-To build the project run:
+```txt
+http://localhost:4200
+```
+
+## Build Angular
+
+Para gerar os arquivos de producao:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Os arquivos finais sao gerados em:
 
-## Running unit tests
+```txt
+dist/front-list-countrys/browser
+```
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Executar com Docker
+
+Crie a imagem:
 
 ```bash
-ng test
+docker build -t front-list-countrys .
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Execute o container:
 
 ```bash
-ng e2e
+docker run -d --name front-list-countrys -p 8080:80 front-list-countrys
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Acesse:
 
-## Additional Resources
+```txt
+http://localhost:8080
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Para parar o container:
+
+```bash
+docker stop front-list-countrys
+```
+
+Para remover o container:
+
+```bash
+docker rm front-list-countrys
+```
+
+## Publicacao da imagem Docker
+
+A imagem foi publicada no Docker Hub:
+
+```txt
+khallarrary/front-list-countrys:1.0
+```
+
+Comandos usados:
+
+```bash
+docker tag front-list-countrys khallarrary/front-list-countrys:1.0
+docker push khallarrary/front-list-countrys:1.0
+```
+
+## Deploy
+
+O projeto foi publicado no Azure Container Apps usando a imagem Docker hospedada no Docker Hub.
+
+URL:
+
+```txt
+https://front-list-countrys.nicefield-56242f44.brazilsouth.azurecontainerapps.io/
+```
+
+Observação: por se tratar de um projeto de estudo hospedado em ambiente gratuito/educacional, a URL de deploy pode ficar temporariamente indisponível.
+
+Configuracoes principais:
+
+- Registry: Docker Hub
+- Imagem: `khallarrary/front-list-countrys:1.0`
+- Porta de destino: `80`
+- Ingress: externo
+- Runtime: Azure Container Apps
+
+## Status
+
+Projeto em desenvolvimento para estudo de Angular, consumo de API, componentizacao, Docker e deploy em cloud.

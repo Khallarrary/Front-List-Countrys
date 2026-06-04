@@ -17,15 +17,21 @@
 
     @if (errorMessage){
       <p class="status status-error">{{ errorMessage }}</p>
-    }
+    } 
+
+    
 
       @if (viewMode === "list"){
         <div class="toolbar-panel">
         <app-search-form (sendNameForPage)="onSearch($event)" />
         </div>
-        @if (!isLoading && !errorMessage){
-    <section class="countries-grid" aria-label="Lista de paises">
-      @for (country of countries; track country.name) {
+
+        
+      @if (!isLoading && !errorMessage){
+
+      <section class="countries-grid" aria-label="Lista de paises">
+      @for (country of paginatedCountries; track country.name) 
+        {
         <article class="country-card">
           <img [src]="country.flagUrl" [alt]="country.flagAlt">
 
@@ -36,10 +42,26 @@
             <p><span>Populacao</span>{{country.population | number}}</p>
           </div>
         </article>
+        }
+      </section>
+
+      @if (totalPages > 1) {
+      <nav class="pagination" aria-label="Paginacao de paises">
+        <button type="button" (click)="previousPage()" [disabled]="currentPage === 1"> 
+          Anterior 
+        </button>
+
+        <span>
+          Pagina {{currentPage}} de {{totalPages}}
+        </span>
+
+        <button type="button" (click)="nextPage()" [disabled]="currentPage === totalPages"> 
+          Proximo 
+        </button>
+      </nav>
       }
-    </section>
-  }
-      }
+        }
+    }
       
       @if (viewMode === "quiz"){
         <div class="quiz-panel">
