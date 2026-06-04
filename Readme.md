@@ -1,57 +1,144 @@
-# Front List Countries
+# Countries Explorer
 
-Aplicação desenvolvida em Angular para listar países consumindo dados de uma API externa.
+Aplicacao Angular para listar paises consumindo uma API publica, com busca por nome, paginacao e um quiz de bandeiras.
 
-## Sobre o projeto
+## Preview
 
-Este projeto exibe uma lista de países com informações como:
+![Countries Explorer - lista de paises](docs/images/countries-explorer-list.png)
 
-- Bandeira
-- Nome
-- Capital
-- Região
-- População
+## Funcionalidades
 
-O objetivo principal foi praticar o consumo de API no Angular usando `HttpClient`, `Observable`, services e renderização de listas no template.
+- Listagem de paises
+- Busca por nome
+- Paginacao da lista
+- Cards com bandeira, capital, regiao e populacao
+- Modo quiz de bandeiras
+- Validacao de resposta no quiz
+- Interface responsiva
+- Build em Docker com Nginx
+- Deploy em Azure Container Apps
 
-## Tecnologias utilizadas
+## Tecnologias
 
 - Angular
 - TypeScript
 - HTML
 - CSS
 - REST Countries API
+- Docker
+- Nginx
+- Docker Hub
+- Azure Container Apps
 
-## Como executar
+## API utilizada
 
-Clone o repositório:
+Os dados dos paises sao consumidos da API publica REST Countries:
 
-```bash
-git clone https://github.com/Khallarrary/Front-List-Countrys
+```txt
+https://restcountries.com/
 ```
 
-Acesse a pasta do projeto:
+## Executar localmente
 
-```bash
-cd front-list-countrys
-```
-
-Instale as dependências:
+Instale as dependencias:
 
 ```bash
 npm install
 ```
 
-Execute o projeto:
+Execute o servidor de desenvolvimento:
 
 ```bash
 npm start
 ```
 
-Acesse no navegador:
+Acesse:
 
+```txt
 http://localhost:4200
+```
+
+## Build Angular
+
+Para gerar os arquivos de producao:
+
+```bash
+npm run build
+```
+
+Os arquivos finais sao gerados em:
+
+```txt
+dist/front-list-countrys/browser
+```
+
+## Executar com Docker
+
+Crie a imagem:
+
+```bash
+docker build -t front-list-countrys .
+```
+
+Execute o container:
+
+```bash
+docker run -d --name front-list-countrys -p 8080:80 front-list-countrys
+```
+
+Acesse:
+
+```txt
+http://localhost:8080
+```
+
+Para parar o container:
+
+```bash
+docker stop front-list-countrys
+```
+
+Para remover o container:
+
+```bash
+docker rm front-list-countrys
+```
+
+## Publicacao da imagem Docker
+
+A imagem foi publicada no Docker Hub:
+
+```txt
+khallarrary/front-list-countrys:1.0
+```
+
+Comandos usados:
+
+```bash
+docker tag front-list-countrys khallarrary/front-list-countrys:1.0
+docker push khallarrary/front-list-countrys:1.0
+```
+
+## Deploy
+
+O projeto foi publicado no Azure Container Apps usando a imagem Docker hospedada no Docker Hub.
+
+URL:
+
+```txt
+https://front-list-countrys.nicefield-56242f44.brazilsouth.azurecontainerapps.io/
+```
+
+Observação: por se tratar de um projeto de estudo hospedado em ambiente gratuito/educacional, a URL de deploy pode ficar temporariamente indisponível.
+
+Configuracoes principais:
+
+- Registry: Docker Hub
+- Imagem: `khallarrary/front-list-countrys:1.0`
+- Porta de destino: `80`
+- Ingress: externo
+- Runtime: Azure Container Apps
 
 ## Status
 
-Projeto em desenvolvimento.
+Projeto em desenvolvimento para estudo de Angular, consumo de API, componentizacao, Docker e deploy em cloud.
