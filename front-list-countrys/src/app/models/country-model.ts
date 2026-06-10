@@ -7,6 +7,7 @@ export interface Country {
   population: number;
   flagUrl: string;
   flagAlt: string;
+  portugueseName: string;
 }
 
 export interface CountryApiResponse {
@@ -18,6 +19,12 @@ export interface CountryApiResponse {
   region: string;
   subregion?: string;
   population: number;
+  translations?: {
+  por?: {
+    common: string;
+    official: string;
+  };
+};
   flags: {
     png: string;
     svg: string;

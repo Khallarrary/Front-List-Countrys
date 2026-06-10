@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 export class CountrySearchPage implements OnInit{
 
     countries: Country[] = [];
+    allCountries: Country[] = [];
     isLoading: boolean = false; 
     errorMessage: string | null = null;
     viewMode: 'list' | 'quiz' = "list";
@@ -69,6 +70,7 @@ export class CountrySearchPage implements OnInit{
 
         this.countryService.getCountries().subscribe({
             next: (countries) => {
+                this.allCountries = countries;
                 this.countries = countries;
                 this.currentPage = 1;
                 this.stopLoading();
@@ -84,26 +86,42 @@ export class CountrySearchPage implements OnInit{
         this.searchCountriesForName(searchText);
     }
 
+    private normalizeAnswer(value: string): string {
+    return value
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[-]/g, ' ')
+        .replace(/\s+/g, ' ');
+}
+
     private searchCountriesForName(searchText: string): void{
         this.startLoading();
 
-        const trimmedSearchText:string = searchText.trim();
+        const trimmedSearchText = this.normalizeAnswer(searchText);
 
         if(trimmedSearchText === ""){
-            this.getCountries();
+            this.countries = this.allCountries;
+            this.currentPage = 1;
+            this.stopLoading();
             return;
         }
-        this.countryService.searchCountries(trimmedSearchText).subscribe({
-            next: (countries: Country[]) => {
-                this.countries = countries;
-                this.currentPage = 1;
-                this.stopLoading();
-            },
-            error: () => {
-                this.errorMessage = "Falha ao recuperar o pais digitado";
-                this.stopLoading();
-            }
+
+        this.countries = this.allCountries.filter((country) => {
+            const name = this.normalizeAnswer(country.name);
+            const officialName = this.normalizeAnswer(country.officialName);
+            const portugueseName = this.normalizeAnswer(country.portugueseName);
+            
+            return (
+                name.includes(trimmedSearchText) ||
+                officialName.includes(trimmedSearchText) ||
+                portugueseName.includes(trimmedSearchText)
+            );
+            
         });      
+           this.currentPage = 1;
+           this.stopLoading();
     }
 
     private startLoading(): void {

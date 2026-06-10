@@ -63,10 +63,8 @@
         }
     }
       
-      @if (viewMode === "quiz"){
-        <div class="quiz-panel">
-          <app-country-quiz [countries]="countries"/>
-        </div>
-      }  
+      @if (viewMode === "quiz" && !isLoading && allCountries.length > 0) {
+  <app-country-quiz [countries]="allCountries" />
+} 
   
 </main>

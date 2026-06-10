@@ -17,7 +17,8 @@ export class CountryService{
     'region',
     'subregion',
     'population',
-    'flags'
+    'flags',
+    'translations'
   ].join(',');
 
 getCountries(): Observable<Country[]>{
@@ -58,8 +59,8 @@ getCountries(): Observable<Country[]>{
       subregion: country.subregion ?? 'Sem sub-regiao',
       population: country.population,
       flagUrl: country.flags.svg || country.flags.png,
-      flagAlt: country.flags.alt ?? `Bandeira de ${country.name.common}`
-
+      flagAlt: country.flags.alt ?? `Bandeira de ${country.name.common}`,
+      portugueseName: country.translations?.por?.common ?? country.name.common
     };
 
   };
