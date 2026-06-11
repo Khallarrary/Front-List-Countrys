@@ -11,23 +11,36 @@ export interface Country {
 }
 
 export interface CountryApiResponse {
-  name: {
+  names: {
     common: string;
     official: string;
+    translations?: {
+      por?: {
+        common: string;
+        official: string;
+      };
+    };
   };
-  capital?: string[];
+  capitals?: {
+    name: string;
+    primary?: boolean;
+  }[];
   region: string;
   subregion?: string;
   population: number;
-  translations?: {
-  por?: {
-    common: string;
-    official: string;
+  flag: {
+    description?: string;
+    url_png?: string;
+    url_svg?: string;
   };
-};
-  flags: {
-    png: string;
-    svg: string;
-    alt?: string;
+  codes?: {
+    alpha_2?: string;
+    alpha_3?: string;
+  };
+}
+
+export interface CountryApiListResponse {
+  data: {
+    objects: CountryApiResponse[];
   };
 }

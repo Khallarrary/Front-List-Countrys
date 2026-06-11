@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, forkJoin, map, Observable, throwError } from 'rxjs';
 
-import { Country, CountryApiResponse } from '../models/country-model';
+import { Country, CountryApiListResponse, CountryApiResponse } from '../models/country-model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,22 +10,36 @@ import { Country, CountryApiResponse } from '../models/country-model';
 
 export class CountryService{
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://restcountries.com/v3.1';
-  private readonly fields = [
-    'name',
-    'capital',
+  private readonly apiUrl = 'https://api.restcountries.com/countries/v5';
+  private readonly apiKey = 'rc_live_f4f98c97020649cfb73de1f08749c63';
+  private readonly responseFields = [
+    'names',
+    'capitals',
     'region',
     'subregion',
     'population',
-    'flags',
-    'translations'
+    'flag',
+    'codes'
   ].join(',');
+  private readonly headers = {
+    Authorization: `Bearer ${this.apiKey}`
+  };
 
 getCountries(): Observable<Country[]>{
-  return this.http
-  .get<CountryApiResponse[]>(`${this.apiUrl}/all?fields=${this.fields}`)
+  const requests = [0, 100, 200].map((offset) =>
+    this.http.get<CountryApiListResponse>(
+      `${this.apiUrl}?limit=100&offset=${offset}&response_fields=${this.responseFields}`,
+      { headers: this.headers }
+    )
+  );
+
+  return forkJoin(requests)
   .pipe(
-    map((countries) => countries.map((country) => this.mapCountry(country))),
+    map((responses) =>
+      responses
+        .flatMap((response) => response.data.objects)
+        .map((country) => this.mapCountry(country))
+    ),
     catchError(() => 
       throwError(() => new Error('Nao foi possivel carregar os paises.'))
   ));
@@ -39,11 +53,12 @@ getCountries(): Observable<Country[]>{
     };
 
     return this.http
-      .get<CountryApiResponse[]>(
-        `${this.apiUrl}/name/${encodeURIComponent(searchTerm)}?fields=${this.fields}`
+      .get<CountryApiListResponse>(
+        `${this.apiUrl}?q=${encodeURIComponent(searchTerm)}&limit=100&response_fields=${this.responseFields}`,
+        { headers: this.headers }
       )
       .pipe(
-        map((countries) => countries.map((country) => this.mapCountry(country))),
+        map((response) => response.data.objects.map((country) => this.mapCountry(country))),
         catchError(() =>
           throwError(() => new Error('Nenhum pais encontrado para essa busca.'))
         )
@@ -51,19 +66,31 @@ getCountries(): Observable<Country[]>{
   };
 
   private mapCountry(country: CountryApiResponse): Country {
+    const portugueseName = country.names.translations?.por?.common ?? country.names.common;
+    const flagUrl = country.flag.url_svg
+      || country.flag.url_png
+      || this.getFlagUrlByCode(country.codes?.alpha_2);
+
     return {
-      name: country.name.common,
-      officialName: country.name.official,
-      capital: country.capital?.join(', ') ?? 'Sem Capital',
+      name: portugueseName,
+      officialName: country.names.official,
+      capital: country.capitals?.map((capital) => capital.name).join(', ') ?? 'Sem Capital',
       region: country.region,
       subregion: country.subregion ?? 'Sem sub-regiao',
       population: country.population,
-      flagUrl: country.flags.svg || country.flags.png,
-      flagAlt: country.flags.alt ?? `Bandeira de ${country.name.common}`,
-      portugueseName: country.translations?.por?.common ?? country.name.common
+      flagUrl,
+      flagAlt: country.flag.description || `Bandeira de ${portugueseName}`,
+      portugueseName
     };
 
   };
 
-};
+  private getFlagUrlByCode(code?: string): string {
+    if (!code) {
+      return '';
+    }
 
+    return `https://flags.restcountries.com/v5/svg/${code.toLowerCase()}.svg`;
+  }
+
+};
