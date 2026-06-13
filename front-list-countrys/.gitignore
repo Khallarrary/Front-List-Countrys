@@ -39,6 +39,9 @@ testem.log
 /typings
 __screenshots__/
 
+# Local secrets
+proxy.conf.json
+
 # System files
 .DS_Store
 Thumbs.db

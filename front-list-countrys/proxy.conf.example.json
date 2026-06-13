@@ -1,0 +1,13 @@
+{
+  "/api/countries": {
+    "target": "https://api.restcountries.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/countries": "/countries/v5"
+    },
+    "headers": {
+      "Authorization": "Bearer SUA_API_KEY_AQUI"
+    }
+  }
+}

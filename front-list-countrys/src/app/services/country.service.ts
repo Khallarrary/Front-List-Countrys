@@ -10,8 +10,7 @@ import { Country, CountryApiListResponse, CountryApiResponse } from '../models/c
 
 export class CountryService{
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'https://api.restcountries.com/countries/v5';
-  private readonly apiKey = 'rc_live_f4f98c97020649cfb73de1f08749c63';
+  private readonly apiUrl = '/api/countries';
   private readonly responseFields = [
     'names',
     'capitals',
@@ -21,15 +20,11 @@ export class CountryService{
     'flag',
     'codes'
   ].join(',');
-  private readonly headers = {
-    Authorization: `Bearer ${this.apiKey}`
-  };
 
 getCountries(): Observable<Country[]>{
   const requests = [0, 100, 200].map((offset) =>
     this.http.get<CountryApiListResponse>(
-      `${this.apiUrl}?limit=100&offset=${offset}&response_fields=${this.responseFields}`,
-      { headers: this.headers }
+      `${this.apiUrl}?limit=100&offset=${offset}&response_fields=${this.responseFields}`
     )
   );
 
@@ -54,8 +49,7 @@ getCountries(): Observable<Country[]>{
 
     return this.http
       .get<CountryApiListResponse>(
-        `${this.apiUrl}?q=${encodeURIComponent(searchTerm)}&limit=100&response_fields=${this.responseFields}`,
-        { headers: this.headers }
+        `${this.apiUrl}?q=${encodeURIComponent(searchTerm)}&limit=100&response_fields=${this.responseFields}`
       )
       .pipe(
         map((response) => response.data.objects.map((country) => this.mapCountry(country))),
